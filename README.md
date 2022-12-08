@@ -19,15 +19,42 @@ To start and initialize an app in an Eliona environment, the app have to registe
 
 - `APPNAME`: must be set to `template`. Some resources use this name to identify the app inside an Eliona environment.
 
+```
+export APPNAME=template
+```
+
 - `CONNECTION_STRING`: configures the [Eliona database](https://github.com/eliona-smart-building-assistant/go-eliona/tree/main/db). Otherwise, the app can't be initialized and started. (e.g. `postgres://user:pass@localhost:5432/iot`)
+
+```
+export CONNECTION_STRING=postgres://user:pass@localhost:5432/iot
+```
 
 - `API_ENDPOINT`:  configures the endpoint to access the [Eliona API v2](https://github.com/eliona-smart-building-assistant/eliona-api). Otherwise, the app can't be initialized and started. (e.g. `http://api-v2:3000/v2`)
 
-- `API_TOKEN`: defines the secret to authenticate the app and access the API. 
+```
+export API_ENDPOINT=http://localhost:3000/v2
+```
+
+- `API_TOKEN`: defines the secret to authenticate the app and access the API.
+
+```
+export API_TOKEN=duchpatrik
+```
 
 - `API_SERVER_PORT`(optional): define the port the API server listens. The default value is Port `3000`. <mark>Todo: Decide if the app needs its own API. If so, an API server have to implemented and the port have to be configurable.</mark>
 
 - `DEBUG_LEVEL`(optional): defines the minimum level that should be [logged](https://github.com/eliona-smart-building-assistant/go-eliona/tree/main/log). Not defined the default level is `info`.
+
+
+
+APPNAME='template';CONNECTION_STRING=postgres://postgres:secret@localhost:5432/iot;API_SERVER_PORT=2999;API_ENDPOINT=http://127.0.0.1:3000/v2;API_TOKEN=secret;DEBUG_LEVEL=debug
+
+
+
+
+
+
+
 
 ### Database tables ###
 
@@ -64,17 +91,73 @@ The app provides its own API to access configuration data and other functions. T
 
 For the API server the [OpenAPI Generator](https://openapi-generator.tech/docs/generators/openapi-yaml) for go-server is used to generate a server stub. The easiest way to generate the server files is to use one of the predefined generation script which use the OpenAPI Generator Docker image.
 
+#### Windows
 ```
-.\generate-api-server.cmd # Windows
-./generate-api-server.sh # Linux
+.\generate-api-server.cmd
 ```
+
+#### Linux
+
+Permit access to the script file
+
+```
+chmod 777 generate-api-server.sh
+```
+
+Re-generate API
+
+```
+./generate-api-server.sh
+```
+
 
 ### Generate Database access ###
 
 For the database access [SQLBoiler](https://github.com/volatiletech/sqlboiler) is used. The easiest way to generate the database files is to use one of the predefined generation script which use the SQLBoiler implementation. Please note that the database connection in the `sqlboiler.toml` file have to be configured.
 
+
+#### Windows
 ```
-.\generate-db.cmd # Windows
-./generate-db.sh # Linux
+.\generate-db.cmd
+```
+
+#### Linux
+
+Permit access to the script file
+
+```
+chmod 777 generate-db.sh
+```
+
+Re-generate API
+
+```
+./generate-db.sh
+```
+
+### Dockerization
+
+```
+docker-compose up --build
+```
+
+
+### Arbitrary commands
+
+go mod tidy
+
+
+### Congecko API response
+
+#### API URL
+
+```
+http://{domain}:{appport}/v1/btc
+```
+
+#### API Response
+
+```
+{"time":{"updated":"Dec 4, 2022 09:16:00 UTC","updatedISO":"2022-12-04T09:16:00+00:00","updateduk":"Dec 4, 2022 at 09:16 GMT"},"disclaimer":"This data was produced from the CoinDesk Bitcoin Price Index (USD). Non-USD currency data converted using hourly conversion rate from openexchangerates.org","chartName":"Bitcoin","bpi":{"USD":{"code":"USD","symbol":"&#36;","rate":"17,028.3491","description":"United States Dollar","rate_float":17028.3491},"GBP":{"code":"GBP","symbol":"&pound;","rate":"14,228.7522","description":"British Pound Sterling","rate_float":14228.7522},"EUR":{"code":"EUR","symbol":"&euro;","rate":"16,588.0981","description":"Euro","rate_float":16588.0981}}}
 ```
 

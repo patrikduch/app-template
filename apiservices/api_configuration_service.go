@@ -22,6 +22,11 @@ import (
 type ConfigurationApiService struct {
 }
 
+func (s *ConfigurationApiService) GetBTC(ctx context.Context) (apiserver.ImplResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 // NewConfigurationApiService creates a default api service
 func NewConfigurationApiService() apiserver.ConfigurationApiServicer {
 	return &ConfigurationApiService{}
