@@ -11,8 +11,12 @@ package apiservices
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"hailo/apiserver"
+	"io"
+	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -22,9 +26,57 @@ import (
 type ConfigurationApiService struct {
 }
 
+type Currency struct {
+	Code        string  `json:"code"`
+	Symbol      string  `json:"symbol"`
+	Rate        string  `json:"rate,omitempty"`
+	Description string  `json:"description"`
+	RateFloat   float64 `json:"rate_float"`
+}
+
+type CurrentPriceResponse struct {
+	Disclaimer string `json:"disclaimer"`
+	ChartName  string `json:"chartName"`
+	BPI        struct {
+		USD Currency `json:"usd"`
+		GBP Currency `json:"gbp"`
+		EUR Currency `json:"eur"`
+	} `json:"bpi"`
+
+	Time struct {
+		Updated string `json:"updated"`
+	} `json:"time"`
+}
+
 func (s *ConfigurationApiService) GetBTC(ctx context.Context) (apiserver.ImplResponse, error) {
-	//TODO implement me
-	panic("implement me")
+
+	response, err := http.Get("https://api.coindesk.com/v1/bpi/currentprice.json")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	bytes, errRead := ioutil.ReadAll(response.Body)
+
+	if errRead != nil {
+		log.Fatal(errRead)
+	}
+
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(response.Body) // Close when we exit close of this receiver function
+
+	var currentPriceResponse CurrentPriceResponse
+	errUnmarshal := json.Unmarshal(bytes, &currentPriceResponse)
+
+	if errUnmarshal != nil {
+		log.Fatal(errUnmarshal)
+	}
+
+	return apiserver.Response(http.StatusOK, currentPriceResponse), nil
 }
 
 // NewConfigurationApiService creates a default api service

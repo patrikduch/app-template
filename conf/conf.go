@@ -15,6 +15,16 @@
 
 package conf
 
-//
-// Todo: Define anything for configuration like structures and methods to read and process configuration
-//
+import "github.com/eliona-smart-building-assistant/go-utils/common"
+
+func GetConnectionString() string {
+	return common.Getenv("CONNECTION_STRING", "NO-STRING")
+}
+
+func GetAppName() string {
+	return common.Getenv("APPNAME", "NO-APPNAME")
+}
+
+func GetApiServerPort() string {
+	return common.Getenv("API_SERVER_PORT", "3000")
+}
