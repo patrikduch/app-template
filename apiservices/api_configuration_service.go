@@ -15,7 +15,6 @@ import (
 	"errors"
 	"hailo/apiserver"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -56,7 +55,7 @@ func (s *ConfigurationApiService) GetBTC(ctx context.Context) (apiserver.ImplRes
 		log.Fatal(err)
 	}
 
-	bytes, errRead := ioutil.ReadAll(response.Body)
+	bytes, errRead := io.ReadAll(response.Body)
 
 	if errRead != nil {
 		log.Fatal(errRead)
