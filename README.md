@@ -141,6 +141,12 @@ Re-generate API
 docker-compose up --build
 ```
 
+#### Issues
+
+Docker cleanup
+```
+docker system prune -a
+```
 
 ### Arbitrary commands
 
