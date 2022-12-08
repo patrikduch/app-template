@@ -146,14 +146,16 @@ docker-compose up --build
 
 go mod tidy
 
+### Endpoint description
 
-### Congecko API response
+#### BTC endpoint
 
-#### API URL
-
+<i>We only care about USD price, so in the Eliona system there is entity "currency" inside public schema, which holds information about allowed currencies.</i>
 ```
 http://{domain}:{appport}/v1/btc
 ```
+
+### Congecko API response
 
 #### API Response
 
