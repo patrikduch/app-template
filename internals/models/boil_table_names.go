@@ -11,11 +11,11 @@ var TableNames = struct {
 	Asset           string
 	AssetType       string
 	AttributeSchema string
-	Currency        string
 	Dashboard       string
 	EdgeBridge      string
 	ElionaApp       string
 	ElionaNode      string
+	FiatCurrency    string
 	Heap            string
 	IosysAccess     string
 	IosysDevice     string
@@ -34,11 +34,11 @@ var TableNames = struct {
 	Asset:           "asset",
 	AssetType:       "asset_type",
 	AttributeSchema: "attribute_schema",
-	Currency:        "currency",
 	Dashboard:       "dashboard",
 	EdgeBridge:      "edge_bridge",
 	ElionaApp:       "eliona_app",
 	ElionaNode:      "eliona_node",
+	FiatCurrency:    "fiat_currency",
 	Heap:            "heap",
 	IosysAccess:     "iosys_access",
 	IosysDevice:     "iosys_device",

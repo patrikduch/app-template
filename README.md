@@ -46,15 +46,10 @@ export API_TOKEN=duchpatrik
 - `DEBUG_LEVEL`(optional): defines the minimum level that should be [logged](https://github.com/eliona-smart-building-assistant/go-eliona/tree/main/log). Not defined the default level is `info`.
 
 
-
-APPNAME='template';CONNECTION_STRING=postgres://postgres:secret@localhost:5432/iot;API_SERVER_PORT=2999;API_ENDPOINT=http://127.0.0.1:3000/v2;API_TOKEN=secret;DEBUG_LEVEL=debug
-
-
-
-
-
-
-
+Whole env configuration
+```
+APPNAME='eliona-app'';CONNECTION_STRING=postgres://postgres:secret@localhost:5432/iot;API_SERVER_PORT=2999;API_ENDPOINT=http://127.0.0.1:3000/v2;API_TOKEN=secret;DEBUG_LEVEL=debug
+```
 
 ### Database tables ###
 
@@ -156,7 +151,11 @@ go mod tidy
 
 #### BTC endpoint
 
-<i>We only care about USD price, so in the Eliona system there is entity "currency" inside public schema, which holds information about allowed currencies.</i>
+<i>We only care about USD price, so in the Eliona system there is entity "fiat_currency" inside public schema, which holds information about allowed currencies.</i>
+
+
+
+
 ```
 http://{domain}:{appport}/v1/btc
 ```
