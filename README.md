@@ -17,11 +17,11 @@ To start and initialize an app in an Eliona environment, the app have to registe
 ~~`APPNAME`: must be set to `template`. Some resources use this name to identify the app inside an Eliona environment.~~-
 Any name is possible... feel free to name your application everything you want.
 
-for example `duch-app`
+for example `eliona-app`
 
 
 ```
-export APPNAME=duch-app
+export APPNAME=eliona-app
 ```
 
 - `CONNECTION_STRING`: configures the [Eliona database](https://github.com/eliona-smart-building-assistant/go-eliona/tree/main/db). Otherwise, the app can't be initialized and started. (e.g. `postgres://postgress:secret@localhost:5432/postgres`)
