@@ -318,6 +318,7 @@ create table if not exists public.mbus_device
 
 create table if not exists public.acl_key_access
 (
+    id          serial not null primary key,
     security_id integer,
     object_id   integer,
     mask        integer,
@@ -328,32 +329,45 @@ create table if not exists public.acl_key_access
     key_id      integer
 );
 
-insert into public.acl_key_access (security_id, object_id, mask, displayname, principal, path, public, key_id)
-values  (null, null, 3, null, false, 'api.nodes', false, 1),
-        (null, null, 3, null, false, 'api.apps.patches', false, 1),
-        (null, null, 3, null, false, 'api.data.trends', false, 1),
-        (null, null, 3, null, false, 'api.alarms.highest', false, 1),
-        (null, null, 3, null, false, 'api.alarms.history', false, 1),
-        (null, null, 3, null, false, 'api.dashboards', false, 1),
-        (null, null, 3, null, false, 'api.agent.devices.mappings', false, 1),
-        (null, null, 3, null, false, 'api.data.listener', false, 1),
-        (null, null, 3, null, false, 'api.agent.devices', false, 1),
-        (null, null, 3, null, false, 'api.widget.types', false, 1),
-        (null, null, 3, null, false, 'api.alarm.rules', false, 1),
-        (null, null, 3, null, false, 'api.alarms', false, 1),
-        (null, null, 3, null, false, 'api.aggregations', false, 1),
-        (null, null, 3, null, false, 'api.asset.types', false, 1),
-        (null, null, 3, null, false, 'api.agents', false, 1),
-        (null, null, 3, null, false, 'api.data.aggregated', false, 1),
-        (null, null, 3, null, false, 'api.data', false, 1),
-        (null, null, 3, null, false, 'api.assets', false, 1),
-        (null, null, 3, null, false, 'api.apps', false, 1),
-        (null, null, 3, null, false, 'api.asset.types.attributes', false, 1),
-        (null, null, 3, null, false, 'api.dashboards.widgets', false, 1);
+--------------------------------------------------------------------------------------------
+-- Author       Patrik Duch
+-- Purpose      Insertion acl_key_access data
+--------------------------------------------------------------------------------------------
+DO $_$
+BEGIN
+    BEGIN
+            IF NOT EXISTS
+                (Select 1 FROM public.acl_key_access limit 1) THEN
+                        INSERT INTO public.acl_key_access (security_id, object_id, mask, displayname, principal, path, public, key_id)
+                            VALUES  (null, null, 3, null, false, 'api.nodes', false, 1),
+                                    (null, null, 3, null, false, 'api.apps.patches', false, 1),
+                                    (null, null, 3, null, false, 'api.data.trends', false, 1),
+                                    (null, null, 3, null, false, 'api.alarms.highest', false, 1),
+                                    (null, null, 3, null, false, 'api.alarms.history', false, 1),
+                                    (null, null, 3, null, false, 'api.dashboards', false, 1),
+                                    (null, null, 3, null, false, 'api.agent.devices.mappings', false, 1),
+                                    (null, null, 3, null, false, 'api.data.listener', false, 1),
+                                    (null, null, 3, null, false, 'api.agent.devices', false, 1),
+                                    (null, null, 3, null, false, 'api.widget.types', false, 1),
+                                    (null, null, 3, null, false, 'api.alarm.rules', false, 1),
+                                    (null, null, 3, null, false, 'api.alarms', false, 1),
+                                    (null, null, 3, null, false, 'api.aggregations', false, 1),
+                                    (null, null, 3, null, false, 'api.asset.types', false, 1),
+                                    (null, null, 3, null, false, 'api.agents', false, 1),
+                                    (null, null, 3, null, false, 'api.data.aggregated', false, 1),
+                                    (null, null, 3, null, false, 'api.data', false, 1),
+                                    (null, null, 3, null, false, 'api.assets', false, 1),
+                                    (null, null, 3, null, false, 'api.apps', false, 1),
+                                    (null, null, 3, null, false, 'api.asset.types.attributes', false, 1),
+                                    (null, null, 3, null, false, 'api.dashboards.widgets', false, 1);
+        END IF;
+    END;
+END $_$;
+
 
 create table if not exists public.keyauth
 (
-    key_id  integer,
+    key_id  integer primary key,
     key     text,
     expires double precision
 );
@@ -385,8 +399,26 @@ create table if not exists public.dashboard
     );
 
 
-create table if not exists public.currency
+--
+-- Name: fiat_currency; Type: TABLE; Schema: public; Owner: -
+--
+CREATE TABLE IF NOT EXISTS public.fiat_currency
 (
-    id serial primary key not null,
-    currency_name      text     not null
+    id            SERIAL      NOT NULL PRIMARY KEY,
+    currency_name VARCHAR(30) NOT NULL
 );
+
+--------------------------------------------------------------------------------------------
+-- Author       Patrik Duch
+-- Purpose      Insertion fiatcurrency data
+--------------------------------------------------------------------------------------------
+DO $_$
+BEGIN
+    BEGIN
+            IF NOT EXISTS
+                (Select 1 FROM public.keyauth limit 1) THEN
+                        INSERT INTO public.fiat_currency VALUES (1, 'USD');
+                        INSERT INTO public.fiat_currency VALUES (2, 'EUR');
+            END IF;
+    END;
+END $_$;
