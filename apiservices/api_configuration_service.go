@@ -11,8 +11,16 @@ package apiservices
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"github.com/eliona-smart-building-assistant/go-utils/db"
 	"hailo/apiserver"
+	"hailo/internals/dtos"
+	"hailo/internals/dtos/requests"
+	"hailo/internals/helpers"
+	"hailo/internals/models"
+	"io"
+	"log"
 	"net/http"
 )
 
@@ -20,6 +28,74 @@ import (
 // This service should implement the business logic for every endpoint for the ConfigurationApi API.
 // Include any external packages or services that will be required by this service.
 type ConfigurationApiService struct {
+}
+
+func (s *ConfigurationApiService) GetBTC(ctx context.Context) (apiserver.ImplResponse, error) {
+
+	// ------- #1: Load stats from Coingecko API  ---------------------------------------------------
+	response, err := http.Get("https://api.coindesk.com/v1/bpi/currentprice.json")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	bytes, errRead := io.ReadAll(response.Body)
+
+	if errRead != nil {
+		log.Fatal(errRead)
+	}
+
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(response.Body) // Close when we exit close of this receiver function
+
+	var currentPriceResponse requests.CurrentPriceResponse
+	errUnmarshal := json.Unmarshal(bytes, &currentPriceResponse)
+
+	if errUnmarshal != nil {
+		log.Fatal(errUnmarshal)
+	}
+	// -------------------------------------------------------------------------------------------
+
+	// -------------------------- # 2: Get BTC currency info  ------------------------------------
+
+	currencyExecutor := models.FiatCurrencies()
+	fiatCurrencies, err := currencyExecutor.All(ctx, db.Database())
+
+	if err != nil {
+		log.Fatal(err)
+	} // handle err
+
+	mapResult := make(map[string]*models.FiatCurrency)
+
+	for _, item := range fiatCurrencies {
+		mapResult[item.CurrencyName] = item
+	}
+
+	var coingeckoCurrencies, error = currentPriceResponse.BPI.GetCurrencies()
+
+	if error != nil {
+		log.Fatal(error)
+	}
+
+	currencies := fiat_currency.FilterAvailableCurrencies(coingeckoCurrencies, mapResult)
+	// -----------------------------------------------------------------------------------------
+
+	// ------------- # 3: Create final result  -------------------------------------------------
+	var res dtos.BtcSummaryDto
+
+	res.ChartName = currentPriceResponse.ChartName
+	res.Disclaimer = currentPriceResponse.Disclaimer
+	res.Time = currentPriceResponse.Time
+	res.Bpi = dtos.Bpi{
+		Currencies: currencies,
+	}
+	// -----------------------------------------------------------------------------------------
+
+	return apiserver.Response(http.StatusOK, res), nil
 }
 
 // NewConfigurationApiService creates a default api service

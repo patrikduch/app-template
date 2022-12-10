@@ -49,6 +49,12 @@ func NewConfigurationApiController(s ConfigurationApiServicer, opts ...Configura
 func (c *ConfigurationApiController) Routes() Routes {
 	return Routes{
 		{
+			"GetBTC",
+			strings.ToUpper("Get"),
+			"/v1/btc",
+			c.GetBTC,
+		},
+		{
 			"GetExamples",
 			strings.ToUpper("Get"),
 			"/v1/examples",
@@ -61,6 +67,19 @@ func (c *ConfigurationApiController) Routes() Routes {
 			c.PostExample,
 		},
 	}
+}
+
+// GetBTC - Get BTC stats
+func (c *ConfigurationApiController) GetBTC(w http.ResponseWriter, r *http.Request) {
+	result, err := c.service.GetBTC(r.Context())
+	// If an error occurred, encode the error with the status code
+	if err != nil {
+		c.errorHandler(w, r, err, &result)
+		return
+	}
+	// If no error, encode the body and the result code
+	EncodeJSONResponse(result.Body, &result.Code, w)
+
 }
 
 // GetExamples - Get example configuration

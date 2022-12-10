@@ -28,10 +28,19 @@ import (
 // The main function starts the app by starting all services necessary for this app and waits
 // until all services are finished.
 func main() {
-	log.Info("Template", "Starting the app.")
+	log.Info("Main", "App is listening on port:"+conf.GetApiServerPort())
 
 	// Necessary to close used init resources, because db.Pool() is used in this app.
 	defer db.ClosePool()
+
+	appName := conf.GetAppName()
+	connectionString := conf.GetConnectionString()
+
+	log.Info("Main", "AppName:"+appName)
+	log.Info("Main", "ConnectionString:"+connectionString)
+
+	// Init the app before the first run.
+	//app.Init(db.Pool(), app.AppName())
 
 	// Init the app before the first run.
 	app.Init(db.Pool(), app.AppName(),

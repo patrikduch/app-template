@@ -32,6 +32,22 @@ tags:
       url: https://github.com/eliona-smart-building-assistant/app-template
 
 paths:
+  /btc:
+    get:
+      tags:
+        - Configuration
+      summary: Get BTC stats
+      description: Gets information about current BTC exchange rate.
+      operationId: getBTC
+      responses:
+        200:
+          description: Successfully returned BTC exchange rate
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BTCDto'
   /examples:
     get:
       tags:
@@ -69,7 +85,16 @@ paths:
 
 components:
   schemas:
-
+    BTCDto:
+      type: object
+      description: Simple BTC exchange rate object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: A id identifying the example configuration
+          readOnly: true
+          nullable: true
     Example:
       type: object
       description: Simply a example configuration
